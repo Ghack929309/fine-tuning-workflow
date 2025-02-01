@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 from datetime import datetime
@@ -5,154 +6,251 @@ from datetime import datetime
 import cv2
 import numpy as np
 import pytesseract
+import svgwrite
 
-# Configuration
-ASSETS_DIR = os.path.join(os.path.dirname(__file__), "assets")
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "output")
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+ASSETS_DIR = os.path.join(os.path.dirname(__file__), "..", "assets/")
+
+print("Flow started")
+start_time = datetime.now()
 
 
 def load_and_preprocess_image(image_path):
-    """Load and preprocess image for analysis"""
-    print("Loading and preprocessing image...")
-    original = cv2.imread(image_path)
-    gray = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
-    _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY_INV)
-    return original, thresh
+    print("loading image")
+    image = cv2.imread(image_path)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    _, binary = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    return binary, image
 
 
-def detect_background_shapes(image, num_colors=5, min_area=100):
-    """Detect solid color background regions with hierarchy"""
-    print("Detecting background shapes...")
-    pixels = image.reshape(-1, 3).astype(np.float32)
-    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
-    _, labels, centers = cv2.kmeans(
-        pixels, num_colors, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS
-    )
+preprocessed_image, original_image = load_and_preprocess_image(
+    os.path.join(ASSETS_DIR, "image-1.jpg")
+)
 
-    centers = np.uint8(centers)
-    hex_colors = [f"#{c[2]:02x}{c[1]:02x}{c[0]:02x}" for c in centers]
 
-    shapes = []
-    for i, color in enumerate(hex_colors):
-        mask = (labels == i).reshape(image.shape[:2]).astype(np.uint8) * 255
-        contours, hierarchy = cv2.findContours(
-            mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+def detect_elements(image):
+    print("detecting elements")
+    edges = cv2.Canny(image, 100, 200)
+    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    return contours
+
+
+detected_contours = detect_elements(preprocessed_image)
+
+
+def extract_dominant_color(image):
+    print("extracting dominant color")
+    if image is None or image.size == 0 or image.shape[0] == 0 or image.shape[1] == 0:
+        return "#000000"  # Return black for invalid images
+
+    try:
+        if len(image.shape) < 3:
+            image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
+
+        pixels = np.float32(image.reshape(-1, 3))
+        n_colors = 1
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, 0.1)
+        flags = cv2.KMEANS_RANDOM_CENTERS
+        _, labels, palette = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
+        _, counts = np.unique(labels, return_counts=True)
+
+        dominant = palette[0]  # Take the first color since n_colors = 1
+        return "#{:02x}{:02x}{:02x}".format(
+            int(dominant[2]), int(dominant[1]), int(dominant[0])
         )
-
-        for j, cnt in enumerate(contours):
-            if cv2.contourArea(cnt) < min_area:
-                continue
-            if hierarchy[0][j][3] != -1:
-                continue  # Skip child contours
-
-            x, y, w, h = cv2.boundingRect(cnt)
-            shapes.append(
-                {
-                    "type": "shape",
-                    "position": {"x": x, "y": y},
-                    "dimensions": {"width": w, "height": h},
-                    "styles": {"backgroundColor": color, "zIndex": len(shapes)},
-                }
-            )
-
-    # Sort by size and position
-    shapes.sort(
-        key=lambda s: (
-            -s["dimensions"]["width"] * s["dimensions"]["height"],
-            s["position"]["y"],
-        )
-    )
-    return shapes
+    except Exception as e:
+        print(f"Error extracting color: {e}")
+        return "#000000"  # Return black as fallback
 
 
-def extract_text_elements(original, processed):
-    """Extract text elements with original background colors"""
-    print("Extracting text elements...")
-    contours, _ = cv2.findContours(processed, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+def extracting_text(image, img_thresh):
     text_elements = []
+    contours, _ = cv2.findContours(img_thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
     for cnt in contours:
         x, y, w, h = cv2.boundingRect(cnt)
-        if w < 10 or h < 10:
+        if w < 5 or h < 5:  # Skip small contours
             continue
 
-        # Get original region for color analysis
-        original_roi = original[y : y + h, x : x + w]
-        processed_roi = processed[y : y + h, x : x + w]
+        # Get original image region BEFORE preprocessing
+        original_roi = image[y : y + h, x : x + w]
 
-        # Color extraction
+        # Get processed ROI for OCR
+        processed_roi = img_thresh[y : y + h, x : x + w]
+
+        # Extract background color from ORIGINAL image
         bg_color = extract_dominant_color(original_roi)
+
+        # Perform OCR on processed image
         text = pytesseract.image_to_string(processed_roi, config="--psm 6").strip()
 
-        if text:
-            text_elements.append(
-                {
-                    "type": "text",
-                    "content": text,
-                    "position": {"x": x, "y": y},
-                    "dimensions": {"width": w, "height": h},
-                    "styles": {
-                        "backgroundColor": bg_color,
-                        "color": "#000000",
-                        "fontSize": 12,
-                        "zIndex": 1000 + len(text_elements),
-                    },
-                }
-            )
+        text_elements.append(
+            {
+                "content": text,
+                "position": {"x": x, "y": y},
+                "dimensions": {"width": w, "height": h},
+                "styles": {
+                    "backgroundColor": bg_color,
+                    "color": "#000000",  # Default text color
+                },
+            }
+        )
 
     return text_elements
 
 
-def extract_dominant_color(roi):
-    """Improved color extraction from ROI"""
-    if roi.size == 0:
-        return "#000000"
+texts = extracting_text(original_image, preprocessed_image)
 
-    try:
-        pixels = np.float32(roi.reshape(-1, 3))
-        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 5, 1.0)
-        _, _, centers = cv2.kmeans(
-            pixels, 2, None, criteria, 5, cv2.KMEANS_RANDOM_CENTERS
+
+def post_process_text(text_elements):
+    print("post processing text")
+    for element in text_elements:
+        element["content"] = "".join(
+            e for e in element["content"] if e.isalnum() or e.isspace()
         )
-        centers = np.uint8(centers)
-        return f"#{centers[0][2]:02x}{centers[0][1]:02x}{centers[0][0]:02x}"
-    except:
-        return "#000000"
+        element["content"] = " ".join(element["content"].split())
+    return text_elements
 
 
-def save_design_data(elements, dimensions, output_dir=OUTPUT_DIR):
-    """Save design data to JSON"""
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    output_path = os.path.join(output_dir, f"design_{timestamp}.json")
+recognized_text = post_process_text(texts)
+print(f"Recognized text: {recognized_text}")
 
-    design_data = {
-        "design": {
-            "dimensions": dimensions,
-            "elements": elements,
-            "metadata": {"generated_at": timestamp, "version": "1.1"},
+
+def detect_and_group_shapes(contours, image):
+    print("detecting and grouping shapes")
+    grouped_shapes = []
+    for contour in contours:
+        x, y, w, h = cv2.boundingRect(contour)
+        roi = image[y : y + h, x : x + w]
+        shape_color = extract_dominant_color(roi)
+        shape = {
+            "position": {"x": int(x), "y": int(y)},
+            "dimensions": {"width": int(w), "height": int(h)},
+            "backgroundColor": shape_color,
         }
+        grouped = False
+
+        for group in grouped_shapes:
+            if (shape["position"]["x"] - group["position"]["x"]) ** 2 + (
+                shape["position"]["y"] - group["position"]["y"]
+            ) ** 2 < 100:
+                group["shapes"].append(shape)
+                grouped = True
+                break
+
+        if not grouped:
+            grouped_shapes.append({"shapes": [shape], "position": shape["position"]})
+
+    return grouped_shapes
+
+
+detected_shapes = detect_and_group_shapes(
+    contours=detected_contours, image=original_image
+)
+
+
+def generate_svg_for_shapes(grouped_shapes):
+    print("generating svg")
+    dwg = svgwrite.Drawing("design.svg", profile="tiny")
+    for group in grouped_shapes:
+        for shape in group["shapes"]:
+            x, y, w, h = (
+                shape["position"]["x"],
+                shape["position"]["y"],
+                shape["dimensions"]["width"],
+                shape["dimensions"]["height"],
+            )
+            background_color = shape.get("backgroundColor", "#000000")
+            dwg.add(
+                dwg.rect(
+                    insert=(x, y),
+                    size=(w, h),
+                    fill=background_color,
+                    stroke="none",
+                )
+            )
+    return dwg.tostring()
+
+
+svg_content = generate_svg_for_shapes(detected_shapes)
+
+
+def detect_and_convert_images(image, contours):
+    print("detecting and converting images")
+    image_elements = []
+    for contour in contours:
+        x, y, w, h = cv2.boundingRect(contour)
+        roi = image[y : y + h, x : x + w]
+        _, buffer = cv2.imencode(".png", roi)
+        image_base64 = base64.b64encode(buffer).decode("utf-8")
+        image_elements.append(
+            {
+                "type": "image",
+                "content": image_base64,
+                "isVisible": True,
+                "position": {"x": x, "y": y},
+                "styles": {
+                    "width": w,
+                    "height": h,
+                    "backgroundColor": extract_dominant_color(roi),
+                },
+            }
+        )
+    return image_elements
+
+
+detected_images = detect_and_convert_images(original_image, detected_contours)
+
+
+def get_image_dimensions(image):
+    print("getting image dimensions")
+    height, width, _ = image.shape
+    return width, height
+
+
+image_width, image_height = get_image_dimensions(original_image)
+
+
+def generate_json_representation(
+    text_elements, shape_elements, image_elements, width, height
+):
+    print("generating json representation")
+    design_json = {
+        "id": "design_1",
+        "text": "Your text content here",
+        "design": {
+            "id": "design_1",
+            "dimensions": {"width": width, "height": height},
+            "background": {
+                "type": "color",
+                "content": extract_dominant_color(original_image),
+                "styles": {
+                    "width": width,
+                    "height": height,
+                    "backgroundColor": extract_dominant_color(original_image),
+                },
+            },
+            "elements": text_elements + shape_elements + image_elements,
+        },
     }
-
-    with open(output_path, "w") as f:
-        json.dump(design_data, f, indent=2)
-
-    return output_path
+    return json.dumps(design_json, indent=2)
 
 
 if __name__ == "__main__":
-    # Main workflow
-    image_path = os.path.join(ASSETS_DIR, "design.png")
-    original, processed = load_and_preprocess_image(image_path)
-    height, width = original.shape[:2]
+    output_dir = os.path.join(os.path.dirname(__file__), "output")
+    os.makedirs(output_dir, exist_ok=True)
+    result = generate_json_representation(
+        text_elements=recognized_text,
+        shape_elements=detected_shapes,
+        width=image_width,
+        height=image_height,
+        image_elements=detected_images,
+    )
 
-    # Detect elements
-    background_shapes = detect_background_shapes(original)
-    text_elements = extract_text_elements(original, processed)
-
-    # Combine elements (backgrounds first)
-    all_elements = background_shapes + text_elements
-
-    # Save and report
-    json_path = save_design_data(all_elements, {"width": width, "height": height})
-    print(f"Design data saved to: {json_path}")
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    output_file_path = os.path.join(output_dir, f"design_{timestamp}.json")
+    with open(output_file_path, "w") as f:
+        f.write(result)
+    print(f"Json representation saved to {output_file_path}")
+    end_time = datetime.now()
+    time_taken = (end_time - start_time).total_seconds() / 60
+    print(f"Time taken: {time_taken:.2f} minutes")

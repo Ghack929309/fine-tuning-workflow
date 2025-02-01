@@ -10,56 +10,50 @@ def load_json_data(json_path):
 
 
 def create_html_template(design_data, output_path):
-    """Generate HTML file with positioned elements"""
-    dimensions = design_data["design"]["dimensions"]
-    elements = design_data["design"]["elements"]
-    background = design_data["design"]["background"]
-
-    html_content = f"""<!DOCTYPE html>
-<html lang="en">
+    """Generate HTML from design data with proper layering"""
+    html = f"""<!DOCTYPE html>
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design Reconstruction</title>
     <style>
         body {{
             margin: 0;
             padding: 20px;
             background: #f5f5f5;
+            font-family: Arial, sans-serif;
         }}
-        
         .design-container {{
             position: relative;
-            width: {dimensions["width"]}px;
-            height: {dimensions["height"]}px;
-            background: {background.get("content", "#ffffff")};
-            margin: 0 auto;
+            width: {design_data["design"]["dimensions"]["width"]}px;
+            height: {design_data["design"]["dimensions"]["height"]}px;
+            margin: 20px auto;
+            background-color: {design_data["design"]["background"].get("content", "#ffffff")};
             overflow: hidden;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }}
-        
         .design-element {{
             position: absolute;
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            transition: opacity 0.3s ease;
         }}
-        
         .shape-element {{
-            background: transparent;
-            border: none;
+            border: 1px solid rgba(0,0,0,0.1);
         }}
-        
         .text-element {{
+            white-space: pre-wrap;
+            pointer-events: none;
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            white-space: pre-wrap;
             line-height: 1.2;
         }}
-        
         .image-element {{
             object-fit: contain;
+        }}
+        .hidden {{
+            opacity: 0;
+            pointer-events: none;
         }}
     </style>
 </head>
@@ -68,71 +62,85 @@ def create_html_template(design_data, output_path):
 """
 
     # Process all elements
-    for element in elements:
+    # First, collect and sort all elements
+    all_elements = []
+    
+    # Add shapes
+    for element in design_data["design"]["elements"]:
         if "shapes" in element:
             for shape in element["shapes"]:
-                styles = shape.get("styles", {})
-                html_content += f"""
-                <div class="design-element shape-element"
-                     style="left: {shape["position"]["x"]}px;
-                            top: {shape["position"]["y"]}px;
-                            width: {shape["dimensions"]["width"]}px;
-                            height: {shape["dimensions"]["height"]}px;
-                            background-color: {styles.get("backgroundColor", "transparent")};
-                            border: {styles.get("border", "none")};
-                            border-radius: {styles.get("borderRadius", "0")}px;
-                            transform: {styles.get("transform", "none")};
-                            opacity: {styles.get("opacity", "1")};
-                            box-shadow: {styles.get("boxShadow", "none")};">
-                </div>
-                """
+                shape["type"] = "shape"
+                all_elements.append(shape)
         else:
-            element_type = element.get("type", "unknown")
-            styles = element.get("styles", {})
-            position = element.get("position", {"x": 0, "y": 0})
-            dimensions = element.get("dimensions", {"width": "auto", "height": "auto"})
+            all_elements.append(element)
+    
+    # Sort elements by z-index
+    sorted_elements = sorted(
+        all_elements,
+        key=lambda x: x.get("styles", {}).get("zIndex", 0)
+    )
 
-            if element_type == "text":
-                html_content += f"""
-                <div class="design-element text-element"
-                     style="left: {position["x"]}px;
-                            top: {position["y"]}px;
-                            width: {dimensions["width"]}px;
-                            height: {dimensions["height"]}px;
-                            color: {styles.get("color", "#000000")};
-                            background-color: {styles.get("backgroundColor", "transparent")};
-                            font-family: {styles.get("fontFamily", "Arial, sans-serif")};
-                            font-size: {styles.get("fontSize", "14")}px;
-                            font-weight: {styles.get("fontWeight", "normal")};
-                            letter-spacing: {styles.get("letterSpacing", "normal")};
-                            text-align: {styles.get("textAlign", "left")};
-                            transform: {styles.get("transform", "none")};
-                            opacity: {styles.get("opacity", "1")};
-                            z-index: {styles.get("zIndex", "auto")};">
-                    {element.get("content", "")}
-                </div>
-                """
-            elif element_type == "image":
-                html_content += f"""
-                <img class="design-element image-element"
-                     src="data:image/png;base64,{element.get("content", "")}"
-                     style="left: {position["x"]}px;
-                            top: {position["y"]}px;
-                            width: {dimensions["width"]}px;
-                            height: {dimensions["height"]}px;
-                            opacity: {styles.get("opacity", "1")};
-                            transform: {styles.get("transform", "none")};
-                            object-fit: {styles.get("objectFit", "contain")};
-                            z-index: {styles.get("zIndex", "auto")};">
-                """
+    # Process each element
+    for element in sorted_elements:
+        elem_type = element.get("type", "unknown")
+        styles = element.get("styles", {})
+        position = element.get("position", {})
+        dimensions = element.get("dimensions", {})
+        is_visible = element.get("isVisible", True)
+        
+        # Common style attributes
+        style_str = f"""
+            left: {position.get("x", 0)}px;
+            top: {position.get("y", 0)}px;
+            width: {dimensions.get("width", "auto")};
+            height: {dimensions.get("height", "auto")};
+            z-index: {styles.get("zIndex", 0)};
+            opacity: {styles.get("opacity", 1)};
+            transform: {styles.get("transform", "none")};
+        """
+        
+        # Visibility class
+        visibility_class = " hidden" if not is_visible else ""
 
-    html_content += """
+        if elem_type == "shape":
+            html += f"""
+        <div class="design-element shape-element{visibility_class}"
+             style="{style_str}
+                    background-color: {styles.get("backgroundColor", "transparent")};
+                    border-radius: {styles.get("borderRadius", "0")}px;
+                    box-shadow: {styles.get("boxShadow", "none")};">
+        </div>"""
+
+        elif elem_type == "text":
+            html += f"""
+        <div class="design-element text-element{visibility_class}"
+             style="{style_str}
+                    color: {styles.get("color", "#000000")};
+                    background-color: {styles.get("backgroundColor", "transparent")};
+                    font-size: {styles.get("fontSize", 12)}px;
+                    font-family: {styles.get("fontFamily", "Arial, sans-serif")};
+                    font-weight: {styles.get("fontWeight", "normal")};
+                    letter-spacing: {styles.get("letterSpacing", "normal")};
+                    text-align: {styles.get("textAlign", "left")};
+                    padding: 2px;">
+            {element.get("content", "")}
+        </div>"""
+
+        elif elem_type == "image":
+            html += f"""
+        <img class="design-element image-element{visibility_class}"
+             src="data:image/png;base64,{element.get("content", "")}"
+             style="{style_str}
+                    object-fit: {styles.get("objectFit", "contain")};"
+             alt="Design element">"""
+
+    html += """
     </div>
 </body>
 </html>"""
 
     with open(output_path, "w") as f:
-        f.write(html_content)
+        f.write(html)
 
 
 if __name__ == "__main__":
