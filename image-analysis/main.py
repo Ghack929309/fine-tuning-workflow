@@ -2,7 +2,6 @@ import base64
 import json
 import os
 from datetime import datetime
-from typing import Any
 
 import cv2
 import numpy as np
@@ -11,17 +10,16 @@ import svgwrite
 
 ASSETS_DIR = os.path.join(os.path.dirname(__file__), "..", "assets/")
 
+print("Flow started")
+start_time = datetime.now()
 print(f"Assets directory: {ASSETS_DIR}")
 
 
-def load_and_preprocess_image(image_path: str):
-    # Load image
+def load_and_preprocess_image(image_path):
     image = cv2.imread(image_path)
-    # Convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    # Apply Gaussian blur to reduce noise
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-    return blurred, image
+    _, binary = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    return binary, image
 
 
 preprocessed_image, original_image = load_and_preprocess_image(
@@ -30,9 +28,7 @@ preprocessed_image, original_image = load_and_preprocess_image(
 
 
 def detect_elements(image):
-    # Detect edges
     edges = cv2.Canny(image, 100, 200)
-    # Find contours
     contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     return contours
 
@@ -40,60 +36,74 @@ def detect_elements(image):
 detected_contours = detect_elements(preprocessed_image)
 
 
-def recognize_text(image, contours: list[Any]):
-    colored_elements = []
+def recognize_text(image, contours):
+    text_elements = []
     for contour in contours:
         x, y, w, h = cv2.boundingRect(contour)
         roi = image[y : y + h, x : x + w]
-        text = pytesseract.image_to_string(roi)
+        text = pytesseract.image_to_string(roi, config="--psm 6")
         if text.strip():
-            colored_elements.append(
+            cleaned_text = "".join(e for e in text if e.isalnum() or e.isspace())
+            text_elements.append(
                 {
                     "type": "text",
-                    "content": text.strip(),
+                    "content": cleaned_text,
+                    "isVisible": True,
                     "position": {"x": x, "y": y},
                     "styles": {"width": w, "height": h},
                 }
             )
-    return colored_elements
+    return text_elements
 
 
-recognized_text = recognize_text(preprocessed_image, contours=detected_contours)
+texts = recognize_text(preprocessed_image, contours=detected_contours)
 
 
-def detect_and_group_shapes(image, contours):
-    shape_elements = []
-    grouped_shapes = []
-    for contour in contours:
-        x, y, w, h = cv2.boundingRect(contour)
-        shape_elements.append(
-            {
-                "type": "shape",
-                "content": "",
-                "position": {"x": x, "y": y},
-                "styles": {"width": w, "height": h},
-            }
+def post_process_text(text_elements):
+    for element in text_elements:
+        # Remove non-printable characters
+        element["content"] = "".join(
+            e for e in element["content"] if e.isalnum() or e.isspace()
         )
-    # Group shapes that are close together
-    for shape in shape_elements:
+        # Normalize text (e.g., remove extra spaces)
+        element["content"] = " ".join(element["content"].split())
+    return text_elements
+
+
+recognized_text = post_process_text(texts)
+print(f"Recognized text: {recognized_text}")
+
+
+def detect_and_group_shapes(contours):
+    grouped_shapes = []
+
+    for contour in contours:
+        # Get bounding rectangle coordinates
+        x, y, w, h = cv2.boundingRect(contour)
+        shape = {
+            "position": {"x": int(x), "y": int(y)},
+            "dimensions": {"width": int(w), "height": int(h)},
+        }
         grouped = False
+
         for group in grouped_shapes:
-            if (shape["position"]["x"] - group["position"]["x"]) ** 2 + (
-                shape["position"]["y"] - group["position"]["y"]
-            ) ** 2 < 100:
-                group["shapes"].append(shape)
-                grouped = True
-                break
+            if "position" in shape and "position" in group:
+                if (shape["position"]["x"] - group["position"]["x"]) ** 2 + (
+                    shape["position"]["y"] - group["position"]["y"]
+                ) ** 2 < 100:
+                    group["shapes"].append(shape)
+                    grouped = True
+                    break
+
         if not grouped:
-            grouped_shapes.append({"shapes": [shape]})
+            grouped_shapes.append({"shapes": [shape], "position": shape["position"]})
+
     return grouped_shapes
 
 
-detected_shapes = detect_and_group_shapes(
-    preprocessed_image, contours=detected_contours
-)
+detected_shapes = detect_and_group_shapes(contours=detected_contours)
 
-print(f"Detected shapes: {detected_shapes}")
+# print(f"Detected shapes: {detected_shapes}")
 
 
 def generate_svg_for_shapes(grouped_shapes):
@@ -103,11 +113,10 @@ def generate_svg_for_shapes(grouped_shapes):
             x, y, w, h = (
                 shape["position"]["x"],
                 shape["position"]["y"],
-                shape["styles"]["width"],
-                shape["styles"]["height"],
+                shape["dimensions"]["width"],
+                shape["dimensions"]["height"],
             )
             dwg.add(dwg.rect(insert=(x, y), size=(w, h), fill="none", stroke="black"))
-    dwg.save()
     return dwg.tostring()
 
 
@@ -125,14 +134,15 @@ def detect_and_convert_images(image, contours):
             {
                 "type": "image",
                 "content": image_base64,
+                "isVisible": True,
                 "position": {"x": x, "y": y},
-                "styles": {"width": w, "height": h},
+                "dimensions": {"width": w, "height": h},
             }
         )
     return image_elements
 
 
-image_elements = detect_and_convert_images(original_image, detected_contours)
+detected_images = detect_and_convert_images(original_image, detected_contours)
 
 
 def extract_dominant_color(roi):
@@ -158,37 +168,39 @@ def extract_dominant_color(roi):
         return "#000000"  # Return black if the dominant color is not valid
 
 
-def add_colors_to_elements(image, elements):
-    for element in elements:
-        x, y, w, h = (
-            element["position"]["x"],
-            element["position"]["y"],
-            element["styles"]["width"],
-            element["styles"]["height"],
-        )
-        roi = image[y : y + h, x : x + w]
-        element["styles"]["color"] = extract_dominant_color(roi)
-    return elements
+# def add_colors_to_elements(image, elements):
+#     # Handle both grouped shapes and individual elements
+#     for element in elements:
+#         if "shapes" in element:  # This is a group of shapes
+#             for shape in element["shapes"]:
+#                 x, y, w, h = (
+#                     shape["position"]["x"],
+#                     shape["position"]["y"],
+#                     shape["dimensions"]["width"],
+#                     shape["dimensions"]["height"],
+#                 )
+#                 roi = image[y : y + h, x : x + w]
+#                 if "styles" not in shape:
+#                     shape["styles"] = {}
+#                 shape["styles"]["color"] = extract_dominant_color(roi)
+#         else:  # This is an individual element
+#             x, y, w, h = (
+#                 element["position"]["x"],
+#                 element["position"]["y"],
+#                 element["dimensions"]["width"],
+#                 element["dimensions"]["height"],
+#             )
+#             roi = image[y : y + h, x : x + w]
+#             if "styles" not in element:
+#                 element["styles"] = {}
+#             element["styles"]["color"] = extract_dominant_color(roi)
+#     return elements
 
 
-colored_text_elements = add_colors_to_elements(original_image, recognized_text)
-colored_shape_elements = add_colors_to_elements(original_image, detected_shapes)
+# colored_text_elements = add_colors_to_elements(original_image, recognized_text)
+# colored_shape_elements = add_colors_to_elements(original_image, detected_shapes)
 # print(f"Colored text elements: {colored_text_elements}")
 # print(f"Colored shape elements: {colored_shape_elements}")
-
-
-def extract_styles(image, elements):
-    for element in elements:
-        x, y, w, h = (
-            element["position"]["x"],
-            element["position"]["y"],
-            element["styles"]["width"],
-            element["styles"]["height"],
-        )
-        roi = image[y : y + h, x : x + w]
-        dominant_color = np.bincount(roi.reshape(-1)).argmax()
-        element["styles"]["color"] = "#{:06x}".format(dominant_color)
-    return elements
 
 
 def get_image_dimensions(image):
@@ -199,16 +211,26 @@ def get_image_dimensions(image):
 image_width, image_height = get_image_dimensions(original_image)
 
 
-def generate_json_representation(text_elements, shape_elements, width, height):
+def generate_json_representation(
+    text_elements, shape_elements, image_elements, width, height
+):
     design_json = {
         "id": "design_1",
-        "dimensions": {"width": width, "height": height},
-        "background": {
-            "type": "color",
-            "content": "#3904AA",
-            "styles": {"width": width, "height": height, "backgroundColor": "#3904AA"},
+        "text": "Your text content here",
+        "design": {
+            "id": "design_1",
+            "dimensions": {"width": width, "height": height},
+            "background": {
+                "type": "color",
+                "content": "#3904AA",
+                "styles": {
+                    "width": width,
+                    "height": height,
+                    "backgroundColor": "#3904AA",
+                },
+            },
+            "elements": text_elements + shape_elements + image_elements,
         },
-        "elements": text_elements + shape_elements,
     }
     return json.dumps(design_json, indent=2)
 
@@ -221,9 +243,14 @@ if __name__ == "__main__":
         shape_elements=detected_shapes,
         width=image_width,
         height=image_height,
+        image_elements=detected_images,
     )
+
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     output_file_path = os.path.join(output_dir, f"design_{timestamp}.json")
     with open(output_file_path, "w") as f:
         f.write(result)
     print(f"Json representation saved to {output_file_path}")
+    end_time = datetime.now()
+    time_taken = (end_time - start_time) / 60
+    print(f"Time taken: {time_taken.total_seconds():.2f} minutes")
