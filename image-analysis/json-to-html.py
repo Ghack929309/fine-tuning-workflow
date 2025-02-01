@@ -1,151 +1,105 @@
 import json
 import os
-from datetime import datetime
+
+OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "output/")
 
 
-def load_json_data(json_path):
-    """Load design data from JSON file"""
+def load_json_data(file_name: str):
+    json_path = os.path.join(OUTPUT_DIR, file_name)
     with open(json_path, "r") as f:
-        return json.load(f)
+        data = json.load(f)
+    print(f"Loaded design from {json_path}")
+    # Extract design information
+    design = data["design"]
+    elements = design["elements"]
+    background = design["background"]
 
+    # Start generating HTML
+    html = '<!DOCTYPE html>\n<html lang="en">\n<head>\n'
+    html += '  <meta charset="UTF-8">\n'
+    html += '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
+    html += "  <title>Design to HTML</title>\n"
+    html += "  <style>\n"
+    html += "    body {\n"
+    html += "      margin: 0;\n"
+    html += "      padding: 0;\n"
+    html += "      width: 100%;\n"
+    html += "      height: 100%;\n"
+    html += "      display: flex;\n"
+    html += "      justify-content: center;\n"
+    html += "      align-items: center;\n"
+    html += "      background-color: #fff;\n"
+    html += "    }\n"
+    html += "    .design-container {\n"
+    html += "      width: {}px;\n".format(design["dimensions"]["width"])
+    html += "      height: {}px;\n".format(design["dimensions"]["height"])
+    html += "      background-color: {};\n".format(background["content"])
+    html += "      position: relative;\n"
+    html += "    }\n"
+    html += "    .element {\n"
+    html += "      position: absolute;\n"
+    html += "    }\n"
+    html += "  </style>\n"
+    html += "</head>\n<body>\n"
+    html += '  <div class="design-container">\n'
 
-def create_html_template(design_data, output_path):
-    """Generate HTML file with positioned elements"""
-    dimensions = design_data["design"]["dimensions"]
-    elements = design_data["design"]["elements"]
-    background = design_data["design"]["background"]
-
-    html_content = f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Design Reconstruction</title>
-    <style>
-        body {{
-            margin: 0;
-            padding: 20px;
-            background: #f5f5f5;
-        }}
-        
-        .design-container {{
-            position: relative;
-            width: {dimensions["width"]}px;
-            height: {dimensions["height"]}px;
-            background: {background.get("content", "#ffffff")};
-            margin: 0 auto;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }}
-        
-        .design-element {{
-            position: absolute;
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }}
-        
-        .shape-element {{
-            background: transparent;
-            border: none;
-        }}
-        
-        .text-element {{
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            white-space: pre-wrap;
-            line-height: 1.2;
-        }}
-        
-        .image-element {{
-            object-fit: contain;
-        }}
-    </style>
-</head>
-<body>
-    <div class="design-container">
-"""
-
-    # Process all elements
+    # Generate HTML elements based on the design elements
     for element in elements:
-        if "shapes" in element:
+        if "shapes" in element:  # This is a group of shapes
             for shape in element["shapes"]:
-                styles = shape.get("styles", {})
-                html_content += f"""
-                <div class="design-element shape-element"
-                     style="left: {shape["position"]["x"]}px;
-                            top: {shape["position"]["y"]}px;
-                            width: {shape["dimensions"]["width"]}px;
-                            height: {shape["dimensions"]["height"]}px;
-                            background-color: {styles.get("backgroundColor", "transparent")};
-                            border: {styles.get("border", "none")};
-                            border-radius: {styles.get("borderRadius", "0")}px;
-                            transform: {styles.get("transform", "none")};
-                            opacity: {styles.get("opacity", "1")};
-                            box-shadow: {styles.get("boxShadow", "none")};">
-                </div>
-                """
-        else:
-            element_type = element.get("type", "unknown")
-            styles = element.get("styles", {})
-            position = element.get("position", {"x": 0, "y": 0})
-            dimensions = element.get("dimensions", {"width": "auto", "height": "auto"})
+                html += '    <div class="element" style="'
+                html += "top: {}px; left: {}px; width: {}px; height: {}px;".format(
+                    shape["position"]["y"],
+                    shape["position"]["x"],
+                    shape["dimensions"]["width"],
+                    shape["dimensions"]["height"],
+                )
+                html += '"></div>\n'  # Shapes are just divs with position and size
+        elif element.get(
+            "isVisible", True
+        ):  # This is a regular element (text or image)
+            # Get width and height from either styles or dimensions
+            width = (
+                element.get("styles", {}).get("width")
+                or element.get("dimensions", {}).get("width")
+                or 0
+            )
+            height = (
+                element.get("styles", {}).get("height")
+                or element.get("dimensions", {}).get("height")
+                or 0
+            )
 
-            if element_type == "text":
-                html_content += f"""
-                <div class="design-element text-element"
-                     style="left: {position["x"]}px;
-                            top: {position["y"]}px;
-                            width: {dimensions["width"]}px;
-                            height: {dimensions["height"]}px;
-                            color: {styles.get("color", "#000000")};
-                            background-color: {styles.get("backgroundColor", "transparent")};
-                            font-family: {styles.get("fontFamily", "Arial, sans-serif")};
-                            font-size: {styles.get("fontSize", "14")}px;
-                            font-weight: {styles.get("fontWeight", "normal")};
-                            letter-spacing: {styles.get("letterSpacing", "normal")};
-                            text-align: {styles.get("textAlign", "left")};
-                            transform: {styles.get("transform", "none")};
-                            opacity: {styles.get("opacity", "1")};
-                            z-index: {styles.get("zIndex", "auto")};">
-                    {element.get("content", "")}
-                </div>
-                """
-            elif element_type == "image":
-                html_content += f"""
-                <img class="design-element image-element"
-                     src="data:image/png;base64,{element.get("content", "")}"
-                     style="left: {position["x"]}px;
-                            top: {position["y"]}px;
-                            width: {dimensions["width"]}px;
-                            height: {dimensions["height"]}px;
-                            opacity: {styles.get("opacity", "1")};
-                            transform: {styles.get("transform", "none")};
-                            object-fit: {styles.get("objectFit", "contain")};
-                            z-index: {styles.get("zIndex", "auto")};">
-                """
+            html += '    <div class="element" style="'
+            html += "top: {}px; left: {}px; width: {}px; height: {}px;".format(
+                element["position"]["y"],
+                element["position"]["x"],
+                width,
+                height,
+            )
+            if element["type"] == "text":
+                html += '">\n'
+                html += "      <span>{}</span>\n".format(element["content"])
+            elif element["type"] == "image":
+                html += 'background-image: url(data:image/png;base64,{});">\n'.format(
+                    element["content"]
+                )
+            html += "    </div>\n"
 
-    html_content += """
-    </div>
-</body>
-</html>"""
+    html += "  </div>\n"
+    html += "</body>\n</html>\n"
 
-    with open(output_path, "w") as f:
-        f.write(html_content)
+    # Save the HTML file
+    html_file_name = file_name.replace(".json", ".html")
+    html_path = os.path.join(OUTPUT_DIR, html_file_name)
+    with open(html_path, "w") as f:
+        f.write(html)
+    print(f"HTML file saved to {html_path}")
+    return html
 
 
 if __name__ == "__main__":
-    # Set up output directory
-    output_dir = os.path.join(os.path.dirname(__file__), "output")
-    os.makedirs(output_dir, exist_ok=True)
-
-    # Example usage
-    json_filename = input("Enter design JSON path: ")
-    json_path = os.path.join(output_dir, f"{json_filename}.json")
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    html_path = os.path.join(output_dir, f"design_{timestamp}.html")
-
-    design_data = load_json_data(json_path)
-    create_html_template(design_data, html_path)
-    print(f"HTML output created at: {html_path}")
+    if not os.path.exists(OUTPUT_DIR):
+        os.makedirs(OUTPUT_DIR)
+    design_file_name = input("Enter the name of the JSON design file: ")
+    load_json_data(design_file_name)
