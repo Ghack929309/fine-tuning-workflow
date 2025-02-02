@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Design Reconstruction</title>
+    <style>
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+        .design-container {
+            position: relative;
+            margin: 20px auto;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .design-element {
+            position: absolute;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        .shape-element {
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .text-element {
+            white-space: pre-wrap;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .image-element {
+            object-fit: contain;
+        }
+        .hidden {
+            opacity: 0 !important;
+            pointer-events: none;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="design-container" style="
+        width: 1080px; 
+        height: 1080px; 
+        background-color: #040718;">
+
+        <div class="design-element text-element"
+             style="position: absolute; left: 152px; top: 60px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: #edeff3; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain">LAUNCH YOUR</div>
+
+        <div class="design-element text-element"
+             style="position: absolute; left: 261px; top: 179px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: #eef0f4; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain">TEACHING</div>
+
+        <div class="design-element text-element"
+             style="position: absolute; left: 255px; top: 293px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: #eef0f4; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain">PLATFORM</div>
+
+        <div class="design-element text-element"
+             style="position: absolute; left: 134px; top: 400px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: #37833c; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain">WITHOUT WRITING A SINGLE LINE</div>
+
+        <div class="design-element text-element"
+             style="position: absolute; left: 426px; top: 458px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: #35823b; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain">OF CODE</div>
+
+        <div class="design-element text-element"
+             style="position: absolute; left: 217px; top: 593px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: #252d37; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain">Course Creation Tools</div>
+
+        <div class="design-element text-element"
+             style="position: absolute; left: 217px; top: 653px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: #242c35; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain">Professional Website</div>
+
+        <div class="design-element text-element"
+             style="position: absolute; left: 216px; top: 708px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: #e9f2f6; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain">Built-in Video Conferencing</div>
+
+        <div class="design-element text-element"
+             style="position: absolute; left: 215px; top: 771px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: #242d36; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain">Community Features</div>
+
+        <div class="design-element text-element"
+             style="position: absolute; left: 273px; top: 941px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: #d6fdd9; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain">GET STARTED FREE</div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 364px; top: 985px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 566px; top: 984px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 403px; top: 963px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f2fef1; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 352px; top: 960px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #239823; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 519px; top: 958px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 331px; top: 958px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f1fef4; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 608px; top: 952px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 613px; top: 950px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f7fef5; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 770px; top: 950px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f2fff0; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 735px; top: 950px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f3fff1; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 698px; top: 950px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5fef3; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 666px; top: 950px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f2fff1; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 579px; top: 950px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f3fff1; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 542px; top: 950px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4fff3; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 467px; top: 950px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5fef3; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 436px; top: 950px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f3fff2; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 352px; top: 950px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f3fff3; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 319px; top: 950px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f3fff1; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 404px; top: 949px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f1fef1; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 278px; top: 949px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f1fef2; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 413px; top: 801px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 495px; top: 800px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 485px; top: 800px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 182px; top: 794px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 555px; top: 791px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 549px; top: 787px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5f9ff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 464px; top: 791px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 458px; top: 787px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 255px; top: 791px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #222935; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 250px; top: 787px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 392px; top: 790px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #212936; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 384px; top: 788px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #262a31; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 392px; top: 782px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #20283a; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 515px; top: 788px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 414px; top: 788px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 340px; top: 788px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 571px; top: 787px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 537px; top: 787px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #212835; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 481px; top: 787px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 362px; top: 787px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f6fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 307px; top: 787px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 273px; top: 787px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f6fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 502px; top: 782px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f1f9fd; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 436px; top: 780px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #212a38; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 384px; top: 780px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 192px; top: 780px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #1d2a3b; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 222px; top: 779px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #1f2936; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 558px; top: 736px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 556px; top: 731px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 299px; top: 736px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 182px; top: 734px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 686px; top: 731px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #252837; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 681px; top: 727px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 591px; top: 731px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 586px; top: 727px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f7fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 500px; top: 731px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #252834; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 495px; top: 727px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 438px; top: 731px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #222934; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 433px; top: 727px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 417px; top: 731px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 411px; top: 727px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f6fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 393px; top: 731px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #262a35; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 288px; top: 730px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5fdff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 288px; top: 722px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 651px; top: 728px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f8fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 660px; top: 727px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #222835; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 651px; top: 720px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 381px; top: 728px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f8fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 313px; top: 728px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fcffff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 322px; top: 727px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f3fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 313px; top: 720px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 271px; top: 728px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f7fdfe; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 271px; top: 720px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 249px; top: 728px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 630px; top: 727px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 609px; top: 727px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 574px; top: 727px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #212835; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 551px; top: 727px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 518px; top: 727px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #242837; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 389px; top: 720px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 354px; top: 720px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #212838; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 280px; top: 720px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f7fdff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 223px; top: 720px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 192px; top: 720px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #20293a; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 538px; top: 719px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f6fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 467px; top: 719px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #20293a; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 302px; top: 676px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 300px; top: 671px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 182px; top: 674px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 578px; top: 671px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 573px; top: 667px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 516px; top: 671px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f7feff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 494px; top: 671px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 489px; top: 667px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f3faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 554px; top: 668px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fafdff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 561px; top: 661px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f9fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 554px; top: 660px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 358px; top: 668px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f7fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 365px; top: 667px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f6fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 358px; top: 660px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 533px; top: 667px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f6fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 410px; top: 667px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f6fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 389px; top: 667px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 337px; top: 667px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 317px; top: 667px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f6fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 295px; top: 667px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 261px; top: 667px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 249px; top: 667px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #232936; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 512px; top: 660px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 451px; top: 660px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 433px; top: 660px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f7fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 223px; top: 660px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f6fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 192px; top: 660px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #21283d; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 282px; top: 659px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4fbfe; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 182px; top: 614px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 459px; top: 612px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 460px; top: 608px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f9fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 467px; top: 607px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 568px; top: 611px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #232a35; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 564px; top: 607px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 409px; top: 611px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 403px; top: 608px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f6faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 334px; top: 611px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 328px; top: 607px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 255px; top: 611px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #242833; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 250px; top: 607px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f6fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 273px; top: 608px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #21283b; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 595px; top: 607px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 541px; top: 607px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5faff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 490px; top: 607px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4fdff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 425px; top: 607px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f4f9ff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 391px; top: 607px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #242834; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 308px; top: 607px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f5fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 296px; top: 607px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f6fbff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 446px; top: 602px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f7fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 587px; top: 600px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #f9fcff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 521px; top: 600px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #1e2a3a; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 459px; top: 600px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 192px; top: 600px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #212a3a; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 361px; top: 599px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #202837; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 222px; top: 599px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #1f293a; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 420px; top: 346px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 426px; top: 329px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: transparent; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 418px; top: 326px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fcfcfe; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 770px; top: 327px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #feffff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 697px; top: 318px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #060815; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 748px; top: 304px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #feffff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 674px; top: 304px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefeff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 530px; top: 304px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fdfffe; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 456px; top: 304px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefefe; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 388px; top: 304px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #feffff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 329px; top: 304px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefeff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 260px; top: 304px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #feffff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 592px; top: 303px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefffe; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 671px; top: 190px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefeff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 635px; top: 190px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefeff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 554px; top: 190px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #feffff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 401px; top: 190px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefffe; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 337px; top: 190px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #feffff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 263px; top: 190px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #feffff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 748px; top: 189px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefefe; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 477px; top: 189px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefeff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 246px; top: 96px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #080812; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 890px; top: 88px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #080615; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 867px; top: 74px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefffe; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 787px; top: 74px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefefe; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 633px; top: 74px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefffe; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 527px; top: 74px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #feffff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 373px; top: 74px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefffe; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 293px; top: 74px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefffd; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 216px; top: 74px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #fefefe; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 158px; top: 74px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #feffff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 705px; top: 73px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #feffff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+
+        <div class="design-element shape-element"
+             style="position: absolute; left: 450px; top: 73px; width: auto; height: auto; z-index: 0; opacity: 1; transform: none; background-color: #feffff; color: transparent; font-size: 12px; font-family: Arial, sans-serif; font-weight: normal; font-style: normal; letter-spacing: normal; text-align: left; line-height: normal; border-radius: 0px; box-shadow: none; object-fit: contain"></div>
+    </div>
+</body>
+</html>

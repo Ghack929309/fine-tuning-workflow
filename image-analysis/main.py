@@ -1,16 +1,24 @@
-import base64
-import json
 import os
+import sys
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import json
 from datetime import datetime
 
 import cv2
+import easyocr
 import numpy as np
 import pytesseract
 import svgwrite
 from sklearn.cluster import DBSCAN
 
+from plugins.image.image_detection import detect_and_convert_images
+from plugins.text.color_detection import get_text_color
+from plugins.text.text_css_properties import analyze_font_characteristics
+
 ASSETS_DIR = os.path.join(os.path.dirname(__file__), "..", "assets/")
 
+reader = easyocr.Reader(["en"])
 
 print("Flow started")
 start_time = datetime.now()
@@ -25,7 +33,7 @@ def load_and_preprocess_image(image_path):
 
 
 preprocessed_image, original_image = load_and_preprocess_image(
-    os.path.join(ASSETS_DIR, "image-7.jpg")
+    os.path.join(ASSETS_DIR, "image-1.jpg")
 )
 
 
@@ -116,6 +124,41 @@ def detect_background_colors(image):
         return []
 
 
+def detect_text(image):
+    result = reader.readtext(image)  # Use original image for OCR
+    texts = []
+
+    for bbox, text, confidence in result:
+        (tl, tr, br, bl) = bbox
+        x1, y1 = int(tl[0]), int(tl[1])
+        x2, y2 = int(br[0]), int(br[1])
+        width = x2 - x1
+        height = y2 - y1
+        print(f"Detected text: '{text}' with confidence: {(confidence * 100):.2f}%")
+        text_region = image[y1:y2, x1:x2]
+        text_color = get_text_color(text_region)
+        font_properties = analyze_font_characteristics(text_region, text)
+        texts.append(
+            {
+                "type": "text",
+                "content": text,
+                "position": {"x": x1, "y": y1},
+                "styles": {
+                    "width": width,
+                    "height": height,
+                    "color": text_color,
+                    **font_properties,
+                },
+            }
+        )
+
+    return texts
+
+
+detected_text = detect_text(original_image)
+print(f"Detected text: {detected_text}")
+
+
 def extracting_text(img_thresh):
     """Extract text with transparent backgrounds and detected text color"""
     text_elements = []
@@ -171,7 +214,7 @@ def detect_and_group_shapes(contours, image):
         shape = {
             "position": {"x": int(x), "y": int(y)},
             "dimensions": {"width": int(w), "height": int(h)},
-            "backgroundColor": shape_color,
+            "background-color": shape_color,
         }
         grouped = False
 
@@ -206,8 +249,8 @@ def generate_svg_for_shapes(grouped_shapes):
                 shape["dimensions"]["height"],
             )
             background_color = (
-                shape.get("backgroundColor", "none")
-                if shape["backgroundColor"] != "transparent"
+                shape.get("background-color", "none")
+                if shape["background-color"] != "transparent"
                 else "none"
             )
             dwg.add(
@@ -226,35 +269,6 @@ svg_content = generate_svg_for_shapes(detected_shapes)
 os.makedirs("svgs", exist_ok=True)
 with open("svgs/design.svg", "w") as f:
     f.write(svg_content)
-
-
-def detect_and_convert_images(image, contours):
-    print("detecting and converting images")
-    image_elements = []
-    for idx, contour in enumerate(contours):
-        x, y, w, h = cv2.boundingRect(contour)
-        roi = image[y : y + h, x : x + w]
-        _, buffer = cv2.imencode(".png", roi)
-        cv2.imshow(f"image_{idx}.png", roi)
-        cv2.waitKey(10)
-        cv2.destroyAllWindows()
-        image_base64 = base64.b64encode(buffer).decode("utf-8")
-        image_elements.append(
-            {
-                "type": "image",
-                "content": image_base64,
-                "isVisible": True,
-                "position": {"x": x, "y": y},
-                "styles": {
-                    "width": w,
-                    "height": h,
-                },
-            }
-        )
-    return image_elements
-
-
-detected_images = detect_and_convert_images(original_image, detected_contours)
 
 
 def get_image_dimensions(image):
@@ -284,7 +298,7 @@ def generate_json_representation(
                 "styles": {
                     "width": width,
                     "height": height,
-                    "backgroundColor": detect_background_colors(original_image)[0][
+                    "background-color": detect_background_colors(original_image)[0][
                         "color"
                     ]
                     if detect_background_colors(original_image)
@@ -297,13 +311,31 @@ def generate_json_representation(
 
     # Add text elements
     for text in text_elements:
+        styles = text.get("styles", {})
+        css_styles = {}
+        if styles:
+            css_styles = {
+                "width": styles.get("width"),
+                "height": styles.get("height"),
+                "color": styles.get("color"),
+                "font-size": styles.get("font-size"),
+                "font-weight": styles.get("font-weight"),
+                "font-style": styles.get("font-style"),
+                "text-align": styles.get("text-align"),
+                "line-height": styles.get("line-height"),
+                "font-family": styles.get("font-family"),
+                "letter-spacing": styles.get("letter-spacing"),
+            }
+            # Remove None values
+            css_styles = {k: v for k, v in css_styles.items() if v is not None}
+
         design_json["design"]["elements"].append(
             {
                 "type": "text",
                 "content": text["content"],
-                "isVisible": text["isVisible"],
+                "isVisible": text.get("isVisible", True),
                 "position": text["position"],
-                "styles": text.get("styles", {}),
+                "styles": css_styles,
             }
         )
 
@@ -319,24 +351,26 @@ def generate_json_representation(
                     "styles": {
                         "width": shape["dimensions"]["width"],
                         "height": shape["dimensions"]["height"],
-                        "backgroundColor": shape["backgroundColor"],
+                        "background-color": shape["background-color"],
                     },
                 }
             )
 
     # Add image elements
     for image in image_elements:
+        styles = {
+            "width": image["styles"]["width"],
+            "height": image["styles"]["height"],
+        }
+        if "background-color" in image["styles"]:
+            styles["background-color"] = image["styles"]["background-color"]
+
         design_json["design"]["elements"].append(
             {
                 "type": "image",
                 "content": image["content"],
-                "isVisible": image["isVisible"],
                 "position": image["position"],
-                "styles": {
-                    "width": image["styles"]["width"],
-                    "height": image["styles"]["height"],
-                    "backgroundColor": image["styles"].get("backgroundColor", None),
-                },
+                "styles": styles,
             }
         )
 
@@ -346,10 +380,11 @@ def generate_json_representation(
 def main():
     output_dir = os.path.join(os.path.dirname(__file__), "output")
     os.makedirs(output_dir, exist_ok=True)
+    image_elements = detect_and_convert_images(original_image)
     result = generate_json_representation(
-        text_elements=recognized_text,
+        text_elements=detected_text,
         shape_elements=detected_shapes,
-        image_elements=detected_images,
+        image_elements=image_elements,
         width=image_width,
         height=image_height,
     )

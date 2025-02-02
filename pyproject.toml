@@ -10,6 +10,7 @@ dependencies = [
     "opencv-python>=4.11.0.86",
     "pillow>=11.1.0",
     "pytesseract>=0.3.13",
+    "scikit-image>=0.25.1",
     "scikit-learn>=1.6.1",
     "scipy>=1.15.1",
     "svgwrite>=1.4.3",
@@ -18,3 +19,6 @@ dependencies = [
     "transformers>=4.48.2",
     "ultralytics>=8.3.23",
 ]
+
+[tool.poetry]
+
