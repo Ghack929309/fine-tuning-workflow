@@ -7,8 +7,10 @@ import cv2
 import numpy as np
 import pytesseract
 import svgwrite
+from sklearn.cluster import DBSCAN
 
 ASSETS_DIR = os.path.join(os.path.dirname(__file__), "..", "assets/")
+
 
 print("Flow started")
 start_time = datetime.now()
@@ -23,7 +25,7 @@ def load_and_preprocess_image(image_path):
 
 
 preprocessed_image, original_image = load_and_preprocess_image(
-    os.path.join(ASSETS_DIR, "image-1.jpg")
+    os.path.join(ASSETS_DIR, "image-7.jpg")
 )
 
 
@@ -37,82 +39,125 @@ def detect_elements(image):
 detected_contours = detect_elements(preprocessed_image)
 
 
-def extract_dominant_color(image):
-    print("extracting dominant color")
+def detect_background_colors(image):
+    """Detects multiple background colors with spatial positions using DBSCAN clustering"""
     if image is None or image.size == 0 or image.shape[0] == 0 or image.shape[1] == 0:
-        return "#000000"  # Return black for invalid images
+        return []
 
     try:
         if len(image.shape) < 3:
             image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
 
-        pixels = np.float32(image.reshape(-1, 3))
-        n_colors = 1
-        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, 0.1)
-        flags = cv2.KMEANS_RANDOM_CENTERS
-        _, labels, palette = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
-        _, counts = np.unique(labels, return_counts=True)
+        # Downsample image to reduce memory usage
+        max_dimension = 100  # Limit maximum dimension
+        h, w = image.shape[:2]
+        scale = min(max_dimension / w, max_dimension / h)
+        if scale < 1:
+            new_w, new_h = int(w * scale), int(h * scale)
+            image = cv2.resize(image, (new_w, new_h), interpolation=cv2.INTER_AREA)
+            h, w = new_h, new_w
 
-        dominant = palette[0]  # Take the first color since n_colors = 1
-        return "#{:02x}{:02x}{:02x}".format(
-            int(dominant[2]), int(dominant[1]), int(dominant[0])
-        )
+        # Create spatial-color features (x, y, r, g, b) more efficiently
+        y_coords, x_coords = np.mgrid[0:h, 0:w]
+        coords = np.column_stack((x_coords.ravel() / w, y_coords.ravel() / h))
+        colors = image.reshape(-1, 3).astype(float) / 255.0
+        features = np.hstack([coords, colors])
+
+        # Cluster using DBSCAN with adjusted parameters for downsampled image
+        dbscan = DBSCAN(
+            eps=0.1, min_samples=5
+        )  # Reduced min_samples due to downsampling
+        clusters = dbscan.fit_predict(features)
+
+        # Calculate cluster statistics
+        unique_clusters = np.unique(clusters[clusters != -1])
+        if len(unique_clusters) == 0:
+            return []
+
+        total_pixels = len(clusters[clusters != -1])
+        color_info = []
+
+        for cluster_id in unique_clusters:
+            mask = clusters == cluster_id
+            cluster_points = features[mask]
+            count = len(cluster_points)
+
+            # Get median color
+            median_color = np.median(cluster_points[:, 2:], axis=0)
+            hex_color = "#{:02x}{:02x}{:02x}".format(
+                int(median_color[2] * 255),
+                int(median_color[1] * 255),
+                int(median_color[0] * 255),
+            )
+
+            # Get position bounds
+            x_min = cluster_points[:, 0].min()
+            x_max = cluster_points[:, 0].max()
+            y_min = cluster_points[:, 1].min()
+            y_max = cluster_points[:, 1].max()
+
+            color_info.append(
+                {
+                    "color": hex_color,
+                    "coverage": count / total_pixels,
+                    "position": {
+                        "x_start": x_min,
+                        "x_end": x_max,
+                        "y_start": y_min,
+                        "y_end": y_max,
+                    },
+                }
+            )
+
+        return sorted(color_info, key=lambda x: -x["coverage"])
+
     except Exception as e:
-        print(f"Error extracting color: {e}")
-        return "#000000"  # Return black as fallback
+        print(f"Error detecting background colors: {e}")
+        return []
 
 
-def extracting_text(image, img_thresh):
+def extracting_text(img_thresh):
+    """Extract text with transparent backgrounds and detected text color"""
     text_elements = []
-    contours, _ = cv2.findContours(img_thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Use RETR_EXTERNAL to get outer contours and avoid detecting individual letters
+    contours, hierarchy = cv2.findContours(
+        img_thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+    )
+
+    # Sort contours from left to right, top to bottom
+    contours = sorted(
+        contours, key=lambda c: (cv2.boundingRect(c)[1], cv2.boundingRect(c)[0])
+    )
 
     for cnt in contours:
         x, y, w, h = cv2.boundingRect(cnt)
-        if w < 5 or h < 5:  # Skip small contours
+        if w < 10 or h < 10:  # Skip very small contours
             continue
 
-        # Get original image region BEFORE preprocessing
-        original_roi = image[y : y + h, x : x + w]
-
-        # Get processed ROI for OCR
+        # Get original and processed regions
         processed_roi = img_thresh[y : y + h, x : x + w]
 
-        # Extract background color from ORIGINAL image
-        bg_color = extract_dominant_color(original_roi)
+        # Use --psm 7 for treating the image as a single text line
+        text = pytesseract.image_to_string(
+            processed_roi, config="--psm 7 --oem 3"
+        ).strip()
 
-        # Perform OCR on processed image
-        text = pytesseract.image_to_string(processed_roi, config="--psm 6").strip()
-
-        text_elements.append(
-            {
-                "content": text,
-                "position": {"x": x, "y": y},
-                "dimensions": {"width": w, "height": h},
-                "styles": {
-                    "backgroundColor": bg_color,
-                    "color": "#000000",  # Default text color
-                },
-            }
-        )
+        if text:  # Only add if text was found
+            text_elements.append(
+                {
+                    "type": "text",
+                    "content": text,
+                    "isVisible": True,
+                    "position": {"x": x, "y": y},
+                    "dimensions": {"width": w, "height": h},
+                }
+            )
 
     return text_elements
 
 
-texts = extracting_text(original_image, preprocessed_image)
-
-
-def post_process_text(text_elements):
-    print("post processing text")
-    for element in text_elements:
-        element["content"] = "".join(
-            e for e in element["content"] if e.isalnum() or e.isspace()
-        )
-        element["content"] = " ".join(element["content"].split())
-    return text_elements
-
-
-recognized_text = post_process_text(texts)
-print(f"Recognized text: {recognized_text}")
+recognized_text = extracting_text(preprocessed_image)
 
 
 def detect_and_group_shapes(contours, image):
@@ -121,7 +166,8 @@ def detect_and_group_shapes(contours, image):
     for contour in contours:
         x, y, w, h = cv2.boundingRect(contour)
         roi = image[y : y + h, x : x + w]
-        shape_color = extract_dominant_color(roi)
+        colors = detect_background_colors(roi)
+        shape_color = colors[0]["color"] if colors else "transparent"
         shape = {
             "position": {"x": int(x), "y": int(y)},
             "dimensions": {"width": int(w), "height": int(h)},
@@ -150,7 +196,7 @@ detected_shapes = detect_and_group_shapes(
 
 def generate_svg_for_shapes(grouped_shapes):
     print("generating svg")
-    dwg = svgwrite.Drawing("design.svg", profile="tiny")
+    dwg = svgwrite.Drawing("svgs/design.svg", profile="tiny")
     for group in grouped_shapes:
         for shape in group["shapes"]:
             x, y, w, h = (
@@ -159,7 +205,11 @@ def generate_svg_for_shapes(grouped_shapes):
                 shape["dimensions"]["width"],
                 shape["dimensions"]["height"],
             )
-            background_color = shape.get("backgroundColor", "#000000")
+            background_color = (
+                shape.get("backgroundColor", "none")
+                if shape["backgroundColor"] != "transparent"
+                else "none"
+            )
             dwg.add(
                 dwg.rect(
                     insert=(x, y),
@@ -173,14 +223,21 @@ def generate_svg_for_shapes(grouped_shapes):
 
 svg_content = generate_svg_for_shapes(detected_shapes)
 
+os.makedirs("svgs", exist_ok=True)
+with open("svgs/design.svg", "w") as f:
+    f.write(svg_content)
+
 
 def detect_and_convert_images(image, contours):
     print("detecting and converting images")
     image_elements = []
-    for contour in contours:
+    for idx, contour in enumerate(contours):
         x, y, w, h = cv2.boundingRect(contour)
         roi = image[y : y + h, x : x + w]
         _, buffer = cv2.imencode(".png", roi)
+        cv2.imshow(f"image_{idx}.png", roi)
+        cv2.waitKey(10)
+        cv2.destroyAllWindows()
         image_base64 = base64.b64encode(buffer).decode("utf-8")
         image_elements.append(
             {
@@ -191,7 +248,6 @@ def detect_and_convert_images(image, contours):
                 "styles": {
                     "width": w,
                     "height": h,
-                    "backgroundColor": extract_dominant_color(roi),
                 },
             }
         )
@@ -222,35 +278,93 @@ def generate_json_representation(
             "dimensions": {"width": width, "height": height},
             "background": {
                 "type": "color",
-                "content": extract_dominant_color(original_image),
+                "content": detect_background_colors(original_image)[0]["color"]
+                if detect_background_colors(original_image)
+                else "transparent",
                 "styles": {
                     "width": width,
                     "height": height,
-                    "backgroundColor": extract_dominant_color(original_image),
+                    "backgroundColor": detect_background_colors(original_image)[0][
+                        "color"
+                    ]
+                    if detect_background_colors(original_image)
+                    else "transparent",
                 },
             },
-            "elements": text_elements + shape_elements + image_elements,
+            "elements": [],
         },
     }
+
+    # Add text elements
+    for text in text_elements:
+        design_json["design"]["elements"].append(
+            {
+                "type": "text",
+                "content": text["content"],
+                "isVisible": text["isVisible"],
+                "position": text["position"],
+                "styles": text.get("styles", {}),
+            }
+        )
+
+    # Add shape elements
+    for shape_group in shape_elements:
+        for shape in shape_group["shapes"]:
+            design_json["design"]["elements"].append(
+                {
+                    "type": "shape",
+                    "content": "",
+                    "isVisible": True,
+                    "position": shape["position"],
+                    "styles": {
+                        "width": shape["dimensions"]["width"],
+                        "height": shape["dimensions"]["height"],
+                        "backgroundColor": shape["backgroundColor"],
+                    },
+                }
+            )
+
+    # Add image elements
+    for image in image_elements:
+        design_json["design"]["elements"].append(
+            {
+                "type": "image",
+                "content": image["content"],
+                "isVisible": image["isVisible"],
+                "position": image["position"],
+                "styles": {
+                    "width": image["styles"]["width"],
+                    "height": image["styles"]["height"],
+                    "backgroundColor": image["styles"].get("backgroundColor", None),
+                },
+            }
+        )
+
     return json.dumps(design_json, indent=2)
 
 
-if __name__ == "__main__":
+def main():
     output_dir = os.path.join(os.path.dirname(__file__), "output")
     os.makedirs(output_dir, exist_ok=True)
     result = generate_json_representation(
         text_elements=recognized_text,
         shape_elements=detected_shapes,
+        image_elements=detected_images,
         width=image_width,
         height=image_height,
-        image_elements=detected_images,
     )
 
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     output_file_path = os.path.join(output_dir, f"design_{timestamp}.json")
-    with open(output_file_path, "w") as f:
-        f.write(result)
-    print(f"Json representation saved to {output_file_path}")
+    with open(output_file_path, "w") as doc:
+        doc.write(result)
+    print(
+        f"Json representation with name: {output_file_path.split('output/')[1].split('.')[0]}"
+    )
     end_time = datetime.now()
     time_taken = (end_time - start_time).total_seconds() / 60
     print(f"Time taken: {time_taken:.2f} minutes")
+
+
+if __name__ == "__main__":
+    main()
