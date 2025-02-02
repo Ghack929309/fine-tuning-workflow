@@ -33,7 +33,7 @@ def load_and_preprocess_image(image_path):
 
 
 preprocessed_image, original_image = load_and_preprocess_image(
-    os.path.join(ASSETS_DIR, "image-1.jpg")
+    os.path.join(ASSETS_DIR, "image-2.jpg")
 )
 
 
